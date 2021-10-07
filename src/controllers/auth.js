@@ -34,7 +34,7 @@ async function generateToken(req, res, next) {
       { _id: user._id, email: user.email },
       process.env.SECRET,
       {
-        expiresIn: '1 minute',
+        expiresIn: '1 hour',
       }
     );
 

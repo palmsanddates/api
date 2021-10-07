@@ -4,8 +4,7 @@ const { param, body } = require('express-validator');
 const Event = require('../models/event');
 
 const checkEndTime = require('../middlewares/validators/checkEndTime');
-const checkMongodbId = require('../middlewares/validators/checkMongodbId')
-
+const checkMongodbId = require('../middlewares/validators/checkMongodbId');
 
 function validate(method) {
   switch (method) {
@@ -89,11 +88,16 @@ async function getEvent(req, res, next) {
 
 async function createEvent(req, res, next) {
   try {
-    const newEvent = new Event(req.body);
+    const { name, location, start_time, end_time } = req.body;
+    const newEvent = new Event({
+      creator: req.user._id,
+      name,
+      location,
+      start_time,
+      end_time,
+    });
     const savedNewEvent = await newEvent.save();
-    return res
-      .status(201)
-      .json({ id: savedNewEvent._id });
+    return res.status(201).json({ id: savedNewEvent._id });
   } catch (error) {
     next(error);
   }
@@ -123,7 +127,7 @@ async function deleteEvent(req, res, next) {
     await Event.findOneAndDelete({
       _id: req.params.eventId,
     });
-    return res.status(200).json({ message: 'Deleted.' })
+    return res.status(200).json({ message: 'Deleted.' });
   } catch (error) {
     next(error);
   }

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const Populate = require('../util/autopopulate');
 
 const EventSchema = new Schema({
-  creator: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+  creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
   bio: { type: String, required: false },
   location: { type: String, required: true },
