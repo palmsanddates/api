@@ -15,14 +15,9 @@ const EventSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'Club',
-      required: false
+      required: false,
     },
   ],
 });
-
-EventSchema.pre('findOne', Populate('creator')).pre(
-  'find',
-  Populate('creator')
-);
 
 module.exports = mongoose.model('Event', EventSchema);
