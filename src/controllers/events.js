@@ -90,7 +90,7 @@ async function createEvent(req, res, next) {
   try {
     const { name, location, start_time, end_time, flyer_img } = req.body;
     const flyerImgKey = await doImgUpload(
-      proces.env.DO_SPACES_NAME,
+      process.env.DO_SPACES_NAME,
       req.user._id,
       flyer_img
     );
