@@ -1,4 +1,4 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') require('dotenv-safe').config();
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
@@ -7,8 +7,8 @@ const helmet = require('helmet');
 const router = express.Router();
 
 // Import Routes
-const roleRouter = require('./routes/roles')
-const userRouter = require('./routes/users')
+const roleRouter = require('./routes/roles');
+const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const eventRouter = require('./routes/events');
 
@@ -27,7 +27,7 @@ app.use(cors());
 
 // Routes
 app.use('/roles', roleRouter);
-app.use('/users', userRouter)
+app.use('/users', userRouter);
 app.use('/auth', authRouter);
 app.use('/events', eventRouter);
 
