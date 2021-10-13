@@ -2,9 +2,9 @@ const createError = require('http-errors');
 const { param, body } = require('express-validator');
 
 const Event = require('../models/event');
-
 const checkEndTime = require('../middlewares/validators/checkEndTime');
 const checkMongodbId = require('../middlewares/validators/checkMongodbId');
+const doImgUpload = require('../util/doImgUpload');
 
 function validate(method) {
   switch (method) {
@@ -88,17 +88,25 @@ async function getEvent(req, res, next) {
 
 async function createEvent(req, res, next) {
   try {
-    const { name, location, start_time, end_time } = req.body;
+    const { name, location, start_time, end_time, flyer_img } = req.body;
+    const flyerImgKey = await doImgUpload(
+      proces.env.DO_SPACES_NAME,
+      req.user._id,
+      flyer_img
+    );
     const newEvent = new Event({
       creator: req.user._id,
       name,
       location,
       start_time,
       end_time,
+      flyer_img_url: `${process.env.DO_SPACES_SUBDOMAIN}/${flyerImgKey}`,
     });
+
     const savedNewEvent = await newEvent.save();
     return res.status(201).json({ id: savedNewEvent._id });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
