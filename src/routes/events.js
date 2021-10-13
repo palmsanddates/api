@@ -4,8 +4,14 @@ const checkAuth = require('../middlewares/checkAuth');
 const router = express.Router();
 
 const eventController = require('../controllers/events.js');
-const { validate, createEvent, getEvents, getEvent, updateEvent, deleteEvent } =
-  eventController;
+const {
+  validate,
+  createEvent,
+  getEvents,
+  getEvent,
+  updateEvent,
+  deleteEvent,
+} = eventController;
 const validateRules = require('../middlewares/validators/validateRules');
 
 router.get('/', getEvents);

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Populate = require('../util/autopopulate');
 
 const EventSchema = new Schema({
   creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
