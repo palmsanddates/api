@@ -10,6 +10,15 @@ function validate(method) {
   }
 }
 
+async function getRoles(req, res, next) {
+  try {
+    const roles = await Role.find({});
+    return res.status(200).json(roles);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function createNewRole(req, res, next) {
   try {
     const { name } = req.body;
@@ -24,6 +33,7 @@ async function createNewRole(req, res, next) {
 
 const roleController = {
   validate,
+  getRoles,
   createNewRole,
 };
 
