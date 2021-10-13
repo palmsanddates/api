@@ -113,13 +113,25 @@ async function createEvent(req, res, next) {
 
 async function updateEvent(req, res, next) {
   try {
-    const event = req.body;
+    const updatedEvent = req.body;
+    const foundEvent = await Event.findById(req.params.eventId);
+
+    if (!foundEvent) {
+      return res.status(404).json({ message: 'Event not found.' });
+    }
+
+    if (!foundEvent.creator.equals(req.user._id)) {
+      return res
+        .status(401)
+        .json({ message: 'You are not the creator of the event.' });
+    }
+
     await Event.updateOne(
       {
         _id: req.params.eventId,
       },
       {
-        $set: event,
+        $set: updatedEvent,
       }
     );
     return res.status(201).json({
@@ -132,6 +144,17 @@ async function updateEvent(req, res, next) {
 
 async function deleteEvent(req, res, next) {
   try {
+    const foundEvent = await Event.findById(req.params.eventId);
+
+    if (!foundEvent) {
+      return res.status(404).json({ message: 'Event not found.' });
+    }
+
+    if (!foundEvent.creator.equals(req.user._id)) {
+      return res
+        .status(401)
+        .json({ message: 'You are not the creator of the event.' });
+    }
     await Event.findOneAndDelete({
       _id: req.params.eventId,
     });
