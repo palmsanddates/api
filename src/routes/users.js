@@ -16,7 +16,7 @@ router.post(
 );
 router.delete(
 	'/:userId',
-	checkRole.bind(null, ['super admin']),
+	checkRole(['super admin']),
 	validate('deleteUser'),
 	validateRules,
 	deleteUser,
