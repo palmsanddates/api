@@ -1,4 +1,5 @@
 const { body } = require('express-validator');
+import AppError from '../util/appError';
 
 const User = require('../models/user');
 const Role = require('../models/role');
@@ -22,13 +23,13 @@ async function generateToken(req, res, next) {
 		const user = await User.findOne({ email });
 
 		if (!user) {
-			return res.status(401).json({ message: 'Wrong Email or Password' });
+			return next(new AppError('Wrong Email or Password', 401));
 		}
 
 		const isMatch = await user.validatePassword(password);
 
 		if (!isMatch) {
-			return res.status(401).json({ message: 'Wrong Email or Password' });
+			return next(new AppError('Wrong Email or Password', 401));
 		}
 
 		const role = await Role.findById(user.role);
@@ -42,7 +43,7 @@ async function generateToken(req, res, next) {
 
 		return res.status(200).json({ token });
 	} catch (error) {
-		next(error);
+		res.status(error.statusCode || 500).json({ message: error.message });
 	}
 }
 

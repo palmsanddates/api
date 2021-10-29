@@ -1,30 +1,23 @@
 const jwt = require('jsonwebtoken');
+import AppError from '../util/appError';
+
 const checkRole = (roleNames) => {
 	return async function (req, res, next) {
+		const authHeader = req.get('Authorization');
+		if (!authHeader) {
+			next(new AppError('Not authorized to access this route', 401));
+		}
+		const token = authHeader.replace('Bearer ', '');
+		let decoded;
 		try {
-			const authHeader = req.get('Authorization');
-			if (!authHeader) {
-				const err = new Error('Not authenticated.');
-				err.statusCode = 401;
-				throw err;
-			}
-			const token = authHeader.replace('Bearer ', '');
-			let decoded;
-			try {
-				decoded = jwt.verify(token, process.env.SECRET);
-			} catch (err) {
-				err.statusCode = 401;
-				throw err;
-			}
-			if (roleNames.includes(decoded.role.name)) {
-				next();
-			} else {
-				const err = new Error('You are not authorized to perform this action');
-				err.statusCode = 403;
-				throw err;
-			}
+			decoded = jwt.verify(token, process.env.SECRET);
 		} catch (err) {
-			res.status(err.statusCode).json({ message: err.message });
+			next(new AppError(`${err.message}`, 401));
+		}
+		if (roleNames.includes(decoded.role.name)) {
+			next();
+		} else {
+			next(new AppError('You are not authorized to perform this action', 403));
 		}
 	};
 };
