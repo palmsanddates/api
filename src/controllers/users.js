@@ -1,4 +1,5 @@
 const { param, body } = require('express-validator');
+import AppError from '../util/appError';
 
 const User = require('../models/user');
 const Role = require('../models/role');
@@ -37,8 +38,8 @@ async function getUsers(req, res, next) {
 	try {
 		const users = await User.find({});
 		return res.status(200).json(users);
-	} catch (err) {
-		next(err);
+	} catch (error) {
+		next(error);
 	}
 }
 
@@ -49,16 +50,14 @@ async function createNewUser(req, res, next) {
 		const role = await Role.findById(roleId);
 
 		if (!role) {
-			return res.status(401).json({ message: 'Role not found.' });
+			return next(new AppError('Role not found.', 401));
 		}
 
 		const newUser = new User({ name, email, password, role: role._id });
 		const createdUser = await newUser.save();
-
 		return res.status(201).json({ id: createdUser._id });
-	} catch (err) {
-		console.error(`@@@@ ${err.message}`);
-		next(err);
+	} catch (error) {
+		next(error);
 	}
 }
 
