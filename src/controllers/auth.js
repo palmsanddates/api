@@ -23,13 +23,13 @@ async function generateToken(req, res, next) {
 		const user = await User.findOne({ email });
 
 		if (!user) {
-			return next(new AppError('Wrong Email or Password', 401));
+			throw new AppError('Wrong Email or Password', 401);
 		}
 
 		const isMatch = await user.validatePassword(password);
 
 		if (!isMatch) {
-			return next(new AppError('Wrong Email or Password', 401));
+			throw new AppError('Wrong Email or Password', 401);
 		}
 
 		const role = await Role.findById(user.role);
@@ -43,7 +43,7 @@ async function generateToken(req, res, next) {
 
 		return res.status(200).json({ token });
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 

@@ -38,8 +38,8 @@ async function getUsers(req, res, next) {
 	try {
 		const users = await User.find({});
 		return res.status(200).json(users);
-	} catch (err) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+	} catch (error) {
+		next(error);
 	}
 }
 
@@ -56,8 +56,8 @@ async function createNewUser(req, res, next) {
 		const newUser = new User({ name, email, password, role: role._id });
 		const createdUser = await newUser.save();
 		return res.status(201).json({ id: createdUser._id });
-	} catch (err) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+	} catch (error) {
+		next(error);
 	}
 }
 
@@ -68,7 +68,7 @@ async function deleteUser(req, res, next) {
 		});
 		return res.status(200).json({ message: 'Deleted.' });
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 

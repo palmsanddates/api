@@ -73,7 +73,7 @@ async function getEvents(req, res, next) {
 		const events = await Event.find({});
 		return res.status(200).json(events);
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
@@ -82,7 +82,7 @@ async function getEvent(req, res, next) {
 		const event = await Event.findById(req.params.eventId);
 		return res.status(200).json(event);
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
@@ -106,7 +106,7 @@ async function createEvent(req, res, next) {
 		const savedNewEvent = await newEvent.save();
 		return res.status(201).json({ id: savedNewEvent._id });
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
@@ -135,7 +135,7 @@ async function updateEvent(req, res, next) {
 			id: req.params.eventId,
 		});
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
@@ -155,7 +155,7 @@ async function deleteEvent(req, res, next) {
 		});
 		return res.status(200).json({ message: 'Deleted.' });
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 

@@ -15,7 +15,7 @@ async function getRoles(req, res, next) {
 		const roles = await Role.find({});
 		return res.status(200).json(roles);
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
@@ -27,7 +27,7 @@ async function createNewRole(req, res, next) {
 
 		return res.status(201).json({ id: createdRole._id });
 	} catch (error) {
-		res.status(error.statusCode || 500).json({ message: error.message });
+		next(error);
 	}
 }
 
