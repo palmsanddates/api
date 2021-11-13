@@ -9,8 +9,22 @@ function validate(method) {
 	switch (method) {
 		case 'generateToken':
 			return [
-				body('email').exists().notEmpty().isString().trim().isEmail(),
-				body('password').exists().notEmpty().isString().trim(),
+				body('email')
+					.exists()
+					.notEmpty()
+					.isString()
+					.trim()
+					.isEmail()
+					.withMessage('Email is not in the correct format')
+					.contains('dominican.edu')
+					.withMessage('Email must be dominican.edu'),
+				body('password')
+					.exists()
+					.notEmpty()
+					.isString()
+					.trim()
+					.isLength({ min: 3, max: 30 })
+					.withMessage('Password must be between 3 and 30 characters'),
 			];
 		default:
 			return [];

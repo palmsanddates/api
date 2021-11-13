@@ -19,8 +19,24 @@ function validate(method) {
 			];
 		case 'createEvent':
 			return [
-				body('name').exists().notEmpty().isString().trim(),
-				body('location').exists().notEmpty().isString().trim(),
+				body('name')
+					.exists()
+					.notEmpty()
+					.isString()
+					.trim()
+					.isLength({ min: 3, max: 50 }),
+				body('description')
+					.exist()
+					.notEmpty()
+					.isString()
+					.trim()
+					.isLength({ min: 3, max: 1000 }),
+				body('location')
+					.exists()
+					.notEmpty()
+					.isString()
+					.trim()
+					.isLength({ min: 3, max: 50 }),
 				body('start_time')
 					.exists()
 					.withMessage('start_time must be provided.')
@@ -44,6 +60,14 @@ function validate(method) {
 					.custom(checkEndTime)
 					.withMessage('start_time must be before end_time.')
 					.bail(),
+				body('rsvp_url')
+					.optional()
+					.isURL()
+					.withMessage('rsvp_url must be a valid URL.'),
+				body('flyer_img')
+					.optional()
+					.isBase64()
+					.withMessage('flyer_img must be a base64 string.'),
 			];
 		case 'updateEvent':
 			return [
