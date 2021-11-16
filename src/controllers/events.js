@@ -65,10 +65,9 @@ function validate(method) {
 					.optional()
 					.isURL()
 					.withMessage('rsvp_url must be a valid URL.'),
-				body('flyer_img')
-					.optional()
-					.isBase64()
-					.withMessage('flyer_img must be a base64 string.'),
+				body('flyer_img'),
+				// .isBase64()
+				// .withMessage('flyer_img must be a base64 string.'),
 			];
 		case 'updateEvent':
 			return [
@@ -130,8 +129,8 @@ async function createEvent(req, res, next) {
 
 		const savedNewEvent = await newEvent.save();
 		return res.status(201).json({ id: savedNewEvent._id });
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		next(err);
 	}
 }
 
