@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const { param, body } = require('express-validator');
+import AppError from '../util/appError';
 
 const Event = require('../models/event');
 const checkEndTime = require('../middlewares/validators/checkEndTime');
@@ -26,7 +27,7 @@ function validate(method) {
 					.trim()
 					.isLength({ min: 3, max: 50 }),
 				body('description')
-					.exist()
+					.exists()
 					.notEmpty()
 					.isString()
 					.trim()
@@ -140,11 +141,14 @@ async function updateEvent(req, res, next) {
 		const foundEvent = await Event.findById(req.params.eventId);
 
 		if (!foundEvent) {
-			return new AppError('Event not found.', 404);
+			throw new AppError('Event not found.', 404);
 		}
 
-		if (!foundEvent.creator.equals(req.user._id)) {
-			return new AppError('You are not the creator of the event.', 401);
+		if (
+			req.decodedToken.role.name === 'admin' &&
+			!foundEvent.creator.equals(req.user._id)
+		) {
+			throw new AppError('You are not the creator of the event.', 401);
 		}
 
 		await Event.updateOne(
@@ -168,11 +172,14 @@ async function deleteEvent(req, res, next) {
 		const foundEvent = await Event.findById(req.params.eventId);
 
 		if (!foundEvent) {
-			return new AppError('Event not found.', 401);
+			throw new AppError('Event not found.', 401);
 		}
 
-		if (!foundEvent.creator.equals(req.user._id)) {
-			return new AppError('You are not the creator of the event.', 401);
+		if (
+			req.decodedToken.role.name === 'admin' &&
+			!foundEvent.creator.equals(req.user._id)
+		) {
+			throw new AppError('You are not the creator of the event.', 401);
 		}
 		await Event.findOneAndDelete({
 			_id: req.params.eventId,
