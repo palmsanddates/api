@@ -4,12 +4,19 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Import Routes
 const roleRouter = require('./routes/roles');
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const eventRouter = require('./routes/events');
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minute
+	max: 100, // limit each IP to 100 requests per windowMs
+	message: 'Too many accounts created.',
+});
 
 // Set App Variable
 const app = express();
@@ -18,10 +25,11 @@ const app = express();
 const connectDB = require('./data/db');
 
 // Middleware
-app.use(express.json({ limit: '25mb' }));
-app.use(logger('dev', { skip: () => process.env.NODE_ENV === 'test' }));
+app.use(logger('common', { skip: () => process.env.NODE_ENV === 'test' }));
 app.use(helmet());
 app.use(cors());
+app.use(limiter);
+app.use(express.json({ limit: '25mb' }));
 
 // Routes
 app.use('/roles', roleRouter);
