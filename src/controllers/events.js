@@ -68,6 +68,11 @@ function validate(method) {
 				body('flyer_img'),
 				// .isBase64()
 				// .withMessage('flyer_img must be a base64 string.'),
+				body('clubs')
+					.exists()
+					.notEmpty()
+					.isArray()
+					.withMessage('clubs must has at least one club.'),
 			];
 		case 'updateEvent':
 			return [
@@ -94,7 +99,7 @@ function validate(method) {
 
 async function getEvents(req, res, next) {
 	try {
-		const events = await Event.find({});
+		const events = await Event.find({}).populate('clubs');
 		return res.status(200).json(events);
 	} catch (error) {
 		next(error);
@@ -103,7 +108,7 @@ async function getEvents(req, res, next) {
 
 async function getEvent(req, res, next) {
 	try {
-		const event = await Event.findById(req.params.eventId);
+		const event = await Event.findById(req.params.eventId).populate('clubs');
 		return res.status(200).json(event);
 	} catch (error) {
 		next(error);
@@ -112,7 +117,16 @@ async function getEvent(req, res, next) {
 
 async function createEvent(req, res, next) {
 	try {
-		const { name, location, start_time, end_time, flyer_img } = req.body;
+		const {
+			name,
+			location,
+			start_time,
+			end_time,
+			flyer_img,
+			rsvp_url,
+			description,
+			clubs,
+		} = req.body;
 		const flyerImgKey = await doImgUpload(
 			process.env.DO_SPACES_NAME,
 			req.user._id,
@@ -125,6 +139,9 @@ async function createEvent(req, res, next) {
 			start_time,
 			end_time,
 			flyer_img_url: `${process.env.DO_SPACES_SUBDOMAIN}/${flyerImgKey}`,
+			rsvp_url,
+			description,
+			clubs,
 		});
 
 		const savedNewEvent = await newEvent.save();
