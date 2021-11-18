@@ -43,7 +43,7 @@ app.use('/roles', roleRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
 app.use('/events', eventRouter);
-app.use('/club', clubRouter);
+app.use('/clubs', clubRouter);
 
 /// //////////////////////////////////////////////////////////////////////////////////////
 // If no explicit error and route requested not found

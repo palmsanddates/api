@@ -12,7 +12,6 @@ const checkAuth = async (req, res, next) => {
 		if (!user) {
 			throw new AppError('User not found', 401);
 		}
-
 		req.token = token;
 		req.user = user;
 		next();

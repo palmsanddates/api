@@ -4,13 +4,7 @@ import AppError from '../util/appError';
 async function getClubs(req, res, next) {
 	try {
 		const clubs = await Club.find({}).populate('events');
-		res.status(200).json({
-			status: 'success',
-			results: clubs.length,
-			data: {
-				clubs,
-			},
-		});
+		res.status(200).json({ clubs });
 	} catch (err) {
 		next(err);
 	}
