@@ -63,16 +63,12 @@ function validate(method) {
 					.bail(),
 				body('rsvp_url')
 					.optional()
-					.isURL()
+					.isURL({ protocols: ['https'] })
 					.withMessage('rsvp_url must be a valid URL.'),
 				body('flyer_img'),
 				// .isBase64()
 				// .withMessage('flyer_img must be a base64 string.'),
-				body('clubs')
-					.exists()
-					.notEmpty()
-					.isArray()
-					.withMessage('clubs must has at least one club.'),
+				body('clubs').exists().withMessage('clubs must has at least one club.'),
 			];
 		case 'updateEvent':
 			return [
@@ -143,10 +139,10 @@ async function createEvent(req, res, next) {
 			description,
 			clubs,
 		});
-
 		const savedNewEvent = await newEvent.save();
 		return res.status(201).json({ id: savedNewEvent._id });
 	} catch (err) {
+		console.log(err);
 		next(err);
 	}
 }

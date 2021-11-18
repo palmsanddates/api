@@ -1,14 +1,19 @@
 const { validationResult } = require('express-validator');
+const AppError = require('../../util/appError');
 
 const validateRules = async (req, res, next) => {
-	const result = validationResult(req);
-
-	if (result.isEmpty()) return next();
-
-	const err = new Error(`Errors in request input.`);
-	err.statusCode = 500;
-	err.data = { errors: result.errors };
-	return next(error);
+	try {
+		const result = validationResult(req);
+		if (!result.isEmpty()) {
+			let errors = result.array().map((err) => err.msg);
+			errors = errors.reduce((acc, curr) => acc + curr, '');
+			console.log(errors);
+			throw new AppError(errors, 500);
+		}
+		next();
+	} catch (error) {
+		next(error);
+	}
 };
 
 module.exports = validateRules;

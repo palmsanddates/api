@@ -28,7 +28,13 @@ const connectDB = require('./data/db');
 // Middleware
 app.use(logger('common', { skip: () => process.env.NODE_ENV === 'test' }));
 app.use(helmet());
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+		credentials: true,
+		optionSuccessStatus: 200,
+	}),
+);
 app.use(limiter);
 app.use(express.json({ limit: '25mb' }));
 
@@ -37,7 +43,7 @@ app.use('/roles', roleRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
 app.use('/events', eventRouter);
-app.use('/club', clubRouter);
+app.use('/clubs', clubRouter);
 
 /// //////////////////////////////////////////////////////////////////////////////////////
 // If no explicit error and route requested not found
