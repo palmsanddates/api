@@ -140,7 +140,10 @@ async function createEvent(req, res, next) {
 			clubs,
 		});
 		const savedNewEvent = await newEvent.save();
-		return res.status(201).json({ id: savedNewEvent._id });
+		const updatedEvent = await Event.find({}).populate('clubs');
+		return res
+			.status(201)
+			.json({ id: savedNewEvent._id, events: updatedEvent });
 	} catch (err) {
 		console.log(err);
 		next(err);
@@ -196,7 +199,8 @@ async function deleteEvent(req, res, next) {
 		await Event.findOneAndDelete({
 			_id: req.params.eventId,
 		});
-		return res.status(200).json({ message: 'Deleted.' });
+		const updatedEvent = await Event.find({}).populate('clubs');
+		return res.status(200).json({ events: updatedEvent });
 	} catch (error) {
 		next(error);
 	}
