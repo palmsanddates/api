@@ -61,11 +61,11 @@ function validate(method) {
 					.custom(checkEndTime)
 					.withMessage('start_time must be before end_time.')
 					.bail(),
-				body('rsvp_url')
-					.optional()
-					.isURL({ protocols: ['https'] })
-					.withMessage('rsvp_url must be a valid URL.'),
-				body('flyer_img'),
+				// body('rsvp_url')
+				// .optional()
+				// .isURL({ protocols: ['https'] })
+				// .withMessage('rsvp_url must be a valid URL.'),
+				// body('flyer_img')
 				// .isBase64()
 				// .withMessage('flyer_img must be a base64 string.'),
 				body('clubs').exists().withMessage('clubs must has at least one club.'),
