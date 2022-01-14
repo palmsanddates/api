@@ -14,7 +14,7 @@ router.get('/:eventId', getEvent);
 router.post(
 	'/',
 	checkAuth,
-	checkRole(['super admin', 'admin']),
+	checkRole(['super_admin', 'admin']),
 	validate('createEvent'),
 	validateRules,
 	createEvent,
@@ -22,7 +22,7 @@ router.post(
 router.patch(
 	'/:eventId',
 	checkAuth,
-	checkRole(['super admin', 'admin']),
+	checkRole(['super_admin', 'admin']),
 	validate('updateEvent'),
 	validateRules,
 	updateEvent,
@@ -30,7 +30,7 @@ router.patch(
 router.delete(
 	'/:eventId',
 	checkAuth,
-	checkRole(['super admin', 'admin']),
+	checkRole(['super_admin', 'admin']),
 	validate('deleteEvent'),
 	validateRules,
 	deleteEvent,

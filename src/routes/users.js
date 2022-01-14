@@ -7,11 +7,11 @@ const userController = require('../controllers/users');
 const { validate, getUsers, createNewUser, deleteUser } = userController;
 const validateRules = require('../middlewares/validators/validateRules');
 
-router.get('/', checkAuth, checkRole(['super admin']), getUsers);
+router.get('/', checkAuth, checkRole(['super_admin']), getUsers);
 router.post(
 	'/',
 	checkAuth,
-	checkRole(['super admin']),
+	checkRole(['super_admin']),
 	validate('createNewUser'),
 	validateRules,
 	createNewUser,
@@ -19,7 +19,7 @@ router.post(
 router.delete(
 	'/:userId',
 	checkAuth,
-	checkRole(['super admin']),
+	checkRole(['super_admin']),
 	validate('deleteUser'),
 	validateRules,
 	deleteUser,

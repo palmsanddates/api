@@ -7,11 +7,11 @@ const roleController = require('../controllers/roles');
 const { validate, getRoles, createNewRole } = roleController;
 const validateRules = require('../middlewares/validators/validateRules');
 
-router.get('/', checkAuth, checkRole(['super admin']), getRoles);
+router.get('/', checkAuth, checkRole(['super_admin']), getRoles);
 router.post(
 	'/',
 	checkAuth,
-	checkRole(['super admin']),
+	checkRole(['super_admin']),
 	validate('createNewRole'),
 	validateRules,
 	createNewRole,
