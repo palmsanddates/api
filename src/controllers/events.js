@@ -46,7 +46,7 @@ function validate(method) {
 					.withMessage('start_time must be a date with ISO8601 standards.')
 					.bail()
 					.toDate()
-					.isAfter()
+					// .isAfter()
 					.withMessage('start_time must be after current time.')
 					.bail(),
 				body('end_time')
@@ -55,7 +55,7 @@ function validate(method) {
 					.withMessage('end_time must be a date with ISO8601 standards.')
 					.bail()
 					.toDate()
-					.isAfter()
+					// .isAfter()
 					.withMessage('end_time must be after current time.')
 					.bail()
 					.custom(checkEndTime)
