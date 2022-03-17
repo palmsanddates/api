@@ -12,6 +12,7 @@ const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const eventRouter = require('./routes/events');
 const clubRouter = require('./routes/clubs');
+const institutionRouter = require('./routes/institutions');
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minute
@@ -44,6 +45,7 @@ app.use('/users', userRouter);
 app.use('/auth', authRouter);
 app.use('/events', eventRouter);
 app.use('/clubs', clubRouter);
+app.use('/institutions', institutionRouter);
 
 /// //////////////////////////////////////////////////////////////////////////////////////
 // If no explicit error and route requested not found
