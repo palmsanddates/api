@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new Schema({
-	role: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
-	institution: {
+	role_id: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
+	institution_id: {
 		type: Schema.Types.ObjectId,
 		ref: 'Institution',
 		required: true,

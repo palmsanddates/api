@@ -53,10 +53,15 @@ async function generateToken(req, res, next) {
 		const isMatch = await user.validatePassword(password);
 		if (!isMatch) throw new AppError('Wrong Email or Password', 401);
 
-		const role = await Role.findById(user.role);
+		const role = await Role.findById(user.role_id);
 
 		const token = jwt.sign(
-			{ _id: user._id, email: user.email, role: role },
+			{
+				_id: user._id,
+				email: user.email,
+				role: role,
+				institution: user.institution_id,
+			},
 			process.env.SECRET,
 			{
 				expiresIn: '1 hour',
@@ -87,8 +92,8 @@ async function signup(req, res, next) {
 			name,
 			email,
 			password,
-			role: userRole._id,
-			institution: institutionId,
+			role_id: userRole._id,
+			institution_id: institutionId,
 		});
 		const createdUser = await newUser.save();
 
@@ -96,7 +101,7 @@ async function signup(req, res, next) {
 			from: 'hello@palmsanddates.com',
 			to: email,
 			subject: 'Welcome to Palms and Dates',
-			html: `Hello and welcome to Palms and Dates!<hr /><br> We are thrilled to have you as a new user. <br> Please use the following password to login to your account: <br> <b>${password}</b>`,
+			html: `<h1>Hello and welcome to Palms and Dates!</h1><hr /><br> <p>We are thrilled to have you as a new user. <br> Please use the following password to login to your account: <br> <b>${password}</b></p>`,
 		};
 
 		await mg.messages.create(process.env.MG_DOMAIN, mailData);
