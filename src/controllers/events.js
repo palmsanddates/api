@@ -3,6 +3,9 @@ const { param, body } = require('express-validator');
 import AppError from '../util/appError';
 
 const Event = require('../models/event');
+const Institution = require('../models/institution');
+const Suggestion = require('../models/suggestion');
+
 const checkEndTime = require('../middlewares/validators/checkEndTime');
 const checkMongodbId = require('../middlewares/validators/checkMongodbId');
 const doImgUpload = require('../util/doImgUpload');
@@ -82,6 +85,17 @@ function validate(method) {
 		case 'deleteEvent':
 			return [
 				param('eventId')
+					.exists()
+					.notEmpty()
+					.isString()
+					.trim()
+					.custom(checkMongodbId),
+			];
+		case 'createSuggestion':
+			return [];
+		case 'getSuggestions':
+			return [
+				param('institutionId')
 					.exists()
 					.notEmpty()
 					.isString()
@@ -206,6 +220,36 @@ async function deleteEvent(req, res, next) {
 	}
 }
 
+async function createSuggestion(req, res, next) {
+	try {
+		const newSuggestion = new Suggestion({
+			name: req.body.name,
+			user_id: req.user._id,
+			institution_id: req.user.institution_id,
+		});
+		await newSuggestion.save();
+		return res.status(201).json({
+			id: newSuggestion._id,
+		});
+	} catch (err) {
+		next(err);
+	}
+}
+
+async function getSuggestions(req, res, next) {
+	try {
+		const institution = await Institution.findById(req.params.institutionId);
+		if (!institution) throw new AppError('Institution not found.', 404);
+
+		const suggestions = await Suggestion.find({
+			institution_id: req.params.institutionId,
+		});
+		return res.status(200).json({ suggestions });
+	} catch (err) {
+		next(err);
+	}
+}
+
 const eventController = {
 	validate,
 	getEvents,
@@ -213,6 +257,8 @@ const eventController = {
 	createEvent,
 	updateEvent,
 	deleteEvent,
+	createSuggestion,
+	getSuggestions,
 };
 
 module.exports = eventController;
