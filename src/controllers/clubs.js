@@ -10,6 +10,17 @@ async function getClubs(req, res, next) {
 	}
 }
 
+async function getInstitutionClubs(req, res, next) {
+	try {
+		const clubs = await Club.find({
+			institution_id: req.params.institutionId,
+		}).populate('events');
+		res.status(200).json({ clubs });
+	} catch (err) {
+		next(err);
+	}
+}
+
 async function createClub(req, res, next) {
 	try {
 		if (!req.body.name) {
@@ -45,6 +56,7 @@ async function deleteClub(req, res, next) {
 
 const clubController = {
 	getClubs,
+	getInstitutionClubs,
 	createClub,
 	deleteClub,
 };

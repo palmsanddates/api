@@ -13,7 +13,6 @@ const UserSchema = new Schema({
 	name: { type: String, required: true },
 	email: { type: String, required: true, index: { unique: true } },
 	password: { type: String, required: true },
-	hall: { type: Schema.Types.ObjectId, ref: 'Hall', required: false },
 	img_url: { type: String, required: false },
 	bio: { type: String, required: false },
 	hometown: { type: String, required: false },

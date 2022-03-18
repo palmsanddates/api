@@ -222,8 +222,10 @@ async function deleteEvent(req, res, next) {
 
 async function createSuggestion(req, res, next) {
 	try {
+		console.log(req.body);
 		const newSuggestion = new Suggestion({
 			name: req.body.name,
+			club_id: req.body.club_id,
 			user_id: req.user._id,
 			institution_id: req.user.institution_id,
 		});
