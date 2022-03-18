@@ -95,7 +95,7 @@ async function signup(req, res, next) {
 			role_id: userRole._id,
 			institution_id: institutionId,
 		});
-		const createdUser = await newUser.save();
+		await newUser.save();
 
 		const mailData = {
 			from: 'hello@palmsanddates.com',
@@ -105,15 +105,7 @@ async function signup(req, res, next) {
 		};
 
 		await mg.messages.create(process.env.MG_DOMAIN, mailData);
-
-		const token = jwt.sign(
-			{ _id: createdUser._id, email: createdUser.email, role: userRole },
-			process.env.SECRET,
-			{
-				expiresIn: '1 hour',
-			},
-		);
-		return res.status(201).json({ token });
+		return res.status(201);
 	} catch (err) {
 		console.error(err);
 		next(err);
